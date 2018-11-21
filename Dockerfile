@@ -5,10 +5,13 @@ EXPOSE 44311
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY ["api_voting_demo/api_voting_demo.csproj", "api_voting_demo/"]
-RUN dotnet restore "api_voting_demo/api_voting_demo.csproj"
-COPY . .
-WORKDIR "/src/api_voting_demo"
+
+# Copy csproj and restore as distinct layer
+COPY api_voting_demo.csproj ./
+RUN dotnet restore "api_voting_demo.csproj"
+
+# Copy everything else and build
+COPY . ./
 RUN dotnet build "api_voting_demo.csproj" -c Release -o /app
 
 FROM build AS publish
