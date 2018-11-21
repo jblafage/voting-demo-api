@@ -1,20 +1,64 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+API portal used by voting app (as a demo) that store data into a postgresql database. It uses dotnet core (sdk 2.1).
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+**Make sure you have dotnet core SDK (2.1 or later) installed on your machine**
+
+```bash
+# clone repo
+git clone https://faurecia-cloud@dev.azure.com/faurecia-cloud/Demo/_git/api_voting_demo
+
+# change directory to your local repository
+cd api_voting_demo
+
+# install dependencies
+dotnet restore
+```
+# Build
+
+```bash
+# clean previous build
+dotnet clean
+
+# build
+dotnet build
+```
+
+# Configuration
+
+You can set connection string to your postgresql database by different ways:
+1. by modifying *appsettings.json* 
+2. by setting environment variable *ConnectionStrings__VotingDb*
+
+Connection string format sample:
+Host=\[db-host\];Port=\[db-port\];Database=\[db-name\];Username=\[db-user\];Password=\[db-pwd\]
+
+# Run Migrations
+
+This project uses Entity Framework Core with a code first approach. To apply migrations on your database, run the following command:
+
+```bash
+# Run migrations
+dotnet ef database update
+```
+
+# Run application
+
+```bash
+# Launch application
+dotnet run
+```
+Then open a web browser and go to https://localhost:5001 or http://localhost:5000
+By default you access to swagger UI.
+
+# Build and run as a container
+
+A docker file is available at root of the project and allow you to build a docker image (based on Linux OS) and to execute your application through a container.
 
 # Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+```bash
+# Add new migrations
+dotnet ef migrations add [Name Of Your Migration]
+```
