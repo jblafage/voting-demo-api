@@ -1,0 +1,23 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+trigger:
+- dev
+
+steps:
+
+- task: Docker@0
+  displayName: Build an image
+  inputs:
+    azureSubscription: 'SPN-dev-app-demo'
+    azureContainerRegistry: '{"loginServer":"acrdevdemo001.azurecr.io", "id" : "/subscriptions/520c16d8-dd43-4109-b271-8e427f58edd5/resourceGroups/rg-dev-app-demo-001/providers/Microsoft.ContainerRegistry/registries/acrdevdemo001"}'
+    imageName: '$(Build.Repository.Name):$(Build.BuildId)'
+    buildArguments: 'config_env=dev'
+
+- task: Docker@0
+  displayName: Push an image
+  inputs:
+    azureSubscription: 'SPN-dev-app-demo'
+    azureContainerRegistry: '{"loginServer":"acrdevdemo001.azurecr.io", "id" : "/subscriptions/520c16d8-dd43-4109-b271-8e427f58edd5/resourceGroups/rg-dev-app-demo-001/providers/Microsoft.ContainerRegistry/registries/acrdevdemo001"}'
+    imageName: '$(Build.Repository.Name):$(Build.BuildId)'
+    action: 'Push an image'
