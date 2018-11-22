@@ -18,10 +18,13 @@ namespace api_voting_demo
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
+            _logger = logger;
             Configuration = configuration;
         }
+
+        private readonly ILogger<Startup> _logger;
 
         public IConfiguration Configuration { get; }
 
@@ -33,7 +36,6 @@ namespace api_voting_demo
             services.AddEntityFrameworkNpgsql();
 
             // Connection to database
-            //var connection = @"Host=10.223.9.183;Port=32000;Database=votingdb;Username=postgres;Password=votingdbpwd!";
             services.AddDbContext<VotingDbContext>
                 (options => options.UseNpgsql(Configuration.GetConnectionString("VotingDb")));
 
@@ -58,6 +60,20 @@ namespace api_voting_demo
                 c.RoutePrefix = string.Empty;
             });
 
+            // Run automatically Entity migrations
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<VotingDbContext>().Database.Migrate();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to migrate or seed database");
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,7 +83,7 @@ namespace api_voting_demo
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
