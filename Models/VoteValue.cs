@@ -11,10 +11,6 @@ namespace api_voting_demo.Models
 
         public string Name { get; set; }
 
-        public long VoteId { get; set; }
-
-        public Vote Vote { get; set; }
-
         public List<VoteResult> VoteResults { get; set; }
     }
 }

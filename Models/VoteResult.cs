@@ -13,6 +13,5 @@ namespace api_voting_demo.Models
 
         public long VoteValueId { get; set; }
 
-        public VoteValue VoteValue { get; set; }
     }
 }

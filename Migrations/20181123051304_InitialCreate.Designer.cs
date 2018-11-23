@@ -10,7 +10,7 @@ using api_voting_demo.Models;
 namespace api_voting_demo.Migrations
 {
     [DbContext(typeof(VotingDbContext))]
-    [Migration("20181121133117_InitialCreate")]
+    [Migration("20181123051304_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,22 +20,6 @@ namespace api_voting_demo.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            modelBuilder.Entity("api_voting_demo.Models.Vote", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Title");
-
-                    b.Property<bool>("Visible");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Votes");
-                });
 
             modelBuilder.Entity("api_voting_demo.Models.VoteResult", b =>
                 {
@@ -60,13 +44,14 @@ namespace api_voting_demo.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<long>("VoteId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("VoteId");
-
                     b.ToTable("VoteValues");
+
+                    b.HasData(
+                        new { Id = 1L, Name = "Cats" },
+                        new { Id = 2L, Name = "Dogs" }
+                    );
                 });
 
             modelBuilder.Entity("api_voting_demo.Models.VoteResult", b =>
@@ -74,14 +59,6 @@ namespace api_voting_demo.Migrations
                     b.HasOne("api_voting_demo.Models.VoteValue", "VoteValue")
                         .WithMany("VoteResults")
                         .HasForeignKey("VoteValueId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("api_voting_demo.Models.VoteValue", b =>
-                {
-                    b.HasOne("api_voting_demo.Models.Vote", "Vote")
-                        .WithMany("VoteValues")
-                        .HasForeignKey("VoteId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

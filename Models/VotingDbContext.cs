@@ -13,8 +13,18 @@ namespace api_voting_demo.Models
         {
         }
 
-        public DbSet<Vote> Votes { get; set; }
         public DbSet<VoteValue> VoteValues { get; set; }
         public DbSet<VoteResult> VoteResults { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            #region VoteValue
+
+            modelBuilder.Entity<VoteValue>().HasData(
+                new VoteValue() { Id = 1, Name = "Cats" },
+                new VoteValue() { Id = 2, Name = "Dogs" });
+
+            #endregion
+        }
     }
 }

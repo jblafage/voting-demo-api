@@ -9,38 +9,16 @@ namespace api_voting_demo.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Votes",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Visible = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Votes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "VoteValues",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Name = table.Column<string>(nullable: true),
-                    VoteId = table.Column<long>(nullable: false)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VoteValues", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_VoteValues_Votes_VoteId",
-                        column: x => x.VoteId,
-                        principalTable: "Votes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -63,15 +41,20 @@ namespace api_voting_demo.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "VoteValues",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 1L, "Cats" });
+
+            migrationBuilder.InsertData(
+                table: "VoteValues",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 2L, "Dogs" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_VoteResults_VoteValueId",
                 table: "VoteResults",
                 column: "VoteValueId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VoteValues_VoteId",
-                table: "VoteValues",
-                column: "VoteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -81,9 +64,6 @@ namespace api_voting_demo.Migrations
 
             migrationBuilder.DropTable(
                 name: "VoteValues");
-
-            migrationBuilder.DropTable(
-                name: "Votes");
         }
     }
 }
