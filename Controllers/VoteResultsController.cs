@@ -117,6 +117,16 @@ namespace api_voting_demo.Controllers
             return Ok(voteResult);
         }
 
+        // DELETE: api/VoteResults
+        [HttpDelete]
+        public async Task<IActionResult> ResetVoteResults()
+        {
+            var allVoteResults = _context.VoteResults;
+            _context.VoteResults.RemoveRange(allVoteResults);
+            await _context.SaveChangesAsync();
+            return Ok("All entries removed");
+        }
+
         private bool VoteResultExists(long id)
         {
             return _context.VoteResults.Any(e => e.Id == id);
