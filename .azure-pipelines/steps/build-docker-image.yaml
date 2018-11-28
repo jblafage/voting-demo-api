@@ -1,0 +1,15 @@
+parameters:
+  spn:
+  acr:
+  image:
+  tag:
+  dockerFile:
+
+steps:
+  - task: Docker@1
+    displayName: 'Build Docker image'
+    inputs:
+      azureSubscriptionEndpoint: "${{ parameters.spn }}"
+      azureContainerRegistry: "${{ parameters.acr }}"
+      imageName: "${{ parameters.image }}:${{ parameters.tag }}"
+      dockerFile: "${{ parameters.dockerFile }}"
