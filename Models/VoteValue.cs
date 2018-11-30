@@ -11,6 +11,8 @@ namespace api_voting_demo.Models
 
         public string Name { get; set; }
 
+        public int Order { get; set; }
+
         public List<VoteResult> VoteResults { get; set; }
     }
 }

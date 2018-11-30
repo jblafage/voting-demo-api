@@ -24,7 +24,7 @@ namespace api_voting_demo.Controllers
         [HttpGet]
         public IEnumerable<VoteValue> GetVoteValues()
         {
-            return _context.VoteValues.Include(value => value.VoteResults);
+            return _context.VoteValues.Include(value => value.VoteResults).OrderBy(v => v.Order);
         }
 
         // GET: api/VoteValues/5
