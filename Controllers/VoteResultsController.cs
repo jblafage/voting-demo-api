@@ -135,9 +135,15 @@ namespace api_voting_demo.Controllers
         public async Task<IActionResult> ResetVoteResults()
         {
             var allVoteResults = _context.VoteResults;
+            var allVoteValues = _context.VoteValues;
+            foreach(VoteValue voteValue in allVoteValues)
+            {
+                if (voteValue != null && !string.IsNullOrEmpty(voteValue.Name)) {
+                    voteCount.WithLabels(voteValue.Name).Set(0);
+                }
+            }
             _context.VoteResults.RemoveRange(allVoteResults);
             await _context.SaveChangesAsync();
-            voteCount.Set(0);
             return Ok("All entries removed");
         }
 
