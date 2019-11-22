@@ -12,7 +12,7 @@ RUN dotnet restore "api_voting_demo.csproj"
 
 # Copy everything else and build
 COPY . ./
-RUN dotnet build "api_voting_demo.csproj" -c Release -o /app
+RUN dotnet build "api_voting_demo.csproj" -c Release
 
 FROM build AS publish
 RUN dotnet publish "api_voting_demo.csproj" -c Release -o /app

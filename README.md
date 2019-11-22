@@ -24,6 +24,17 @@ dotnet clean
 # build
 dotnet build
 ```
+## Build a Docker image
+
+```shell
+# Build image
+docker build --rm \
+    --file "Dockerfile" \
+    --build-arg http_proxy="http://euedcunil0200.edc.eu.corp:7070" \
+    --build-arg https_proxy="http://euedcunil0200.edc.eu.corp:7070" \
+    -t voting-demo-api:latest  .
+```
+
 
 # Configuration
 

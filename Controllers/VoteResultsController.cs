@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using api_voting_demo.Models;
+using Prometheus;
 
 namespace api_voting_demo.Controllers
 {
@@ -13,6 +14,13 @@ namespace api_voting_demo.Controllers
     [ApiController]
     public class VoteResultsController : ControllerBase
     {
+        private static readonly Gauge voteCount = Metrics.CreateGauge("faurvoting_option_voted", "Number of voted options.",
+            new GaugeConfiguration
+            {
+                LabelNames = new[] { "name" }
+            }
+        );
+
         private readonly VotingDbContext _context;
 
         public VoteResultsController(VotingDbContext context)
@@ -90,6 +98,11 @@ namespace api_voting_demo.Controllers
                 return BadRequest(ModelState);
             }
 
+            var voteValue = await _context.VoteValues.FindAsync(voteResult.VoteValueId);
+            if (voteValue != null && !string.IsNullOrEmpty(voteValue.Name)) {
+                voteCount.WithLabels(voteValue.Name).Inc();
+            }
+            
             _context.VoteResults.Add(voteResult);
             await _context.SaveChangesAsync();
 
@@ -124,6 +137,7 @@ namespace api_voting_demo.Controllers
             var allVoteResults = _context.VoteResults;
             _context.VoteResults.RemoveRange(allVoteResults);
             await _context.SaveChangesAsync();
+            voteCount.Set(0);
             return Ok("All entries removed");
         }
 

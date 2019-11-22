@@ -13,6 +13,7 @@ using api_voting_demo.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using Prometheus;
 
 namespace api_voting_demo
 {
@@ -49,6 +50,10 @@ namespace api_voting_demo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Enable standard ASP.NET Core metrics
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
