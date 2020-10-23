@@ -1,0 +1,26 @@
+name: '$(Date:yyyyMMdd)$(Rev:.r)'
+
+# Use the Azure DevOps pipeline templates
+resources:
+  repositories:
+    - repository: 'pipelines'
+      type: 'git'
+      name: 'Azure/template-pipelines'
+
+trigger:
+  branches:
+    include:
+      - 'develop'
+      - 'master'
+
+jobs:
+- template: jobs/sonar-process.yml@pipelines
+  parameters:
+    sonarqube_host: 'https://sonarqube.app.corp'
+    prepare_sonarInstance: SNR-prd-admin-$(System.TeamProject)
+    
+    prepare_additionalParameters:
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliSources: "$(Build.SourcesDirectory)/$(Build.Repository.Name)/app/"
+      cliProjectKey: "faurecia-cloud---Demo---voting-demo-api"
