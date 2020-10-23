@@ -7,6 +7,14 @@ resources:
       type: 'git'
       name: 'Azure/template-pipelines'
 
+variables:
+  - name: solution
+    value: '$(Build.SourcesDirectory)/$(Build.Repository.Name)/**/*.sln'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: disable.coverage.autogenerate
+    value: 'true'
+
 trigger:
   branches:
     include:
@@ -19,8 +27,33 @@ jobs:
     sonarqube_host: 'https://sonarqube.app.corp'
     prepare_sonarInstance: SNR-prd-admin-$(System.TeamProject)
     
-    prepare_additionalParameters:
-      scannerMode: 'CLI'
-      configMode: 'manual'
-      cliSources: "$(Build.SourcesDirectory)/$(Build.Repository.Name)/app/"
-      cliProjectKey: "faurecia-cloud---Demo---voting-demo-api"
+    step_postPrepare:
+    - task: DotNetCoreCLI@2
+      enabled: true
+      displayName: 'dotnet restore'
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+
+    - task: DotNetCoreCLI@2
+      enabled: true
+      displayName: 'dotnet build'
+      inputs:
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '--no-restore --configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test'
+      enabled: true
+      inputs:
+        command: 'test'
+        projects: '$(solution)'
+        arguments: '--no-restore --no-build --configuration $(buildConfiguration) --collect:"Code Coverage"'
+        publishTestResults: true
+        testRunTitle: 'SonarQube analysis test run'
+
+    prepare_sonarAdditionalProperties: |
+      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+      sonar.coverage.exclusions=**/Migrations/*.cs,**/*Tests*/**/*
+      sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml
