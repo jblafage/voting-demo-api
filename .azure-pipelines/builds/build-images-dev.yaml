@@ -12,8 +12,8 @@ jobs:
     parameters:
       jobName: 'build_api_image'
       vmImage: 'ubuntu-16.04'
-      spn: 'SPN-dev-app-demo'
-      acr: 'acrdevdemo001.azurecr.io'
+      spn: 'spn-dev-app-faurvoting'
+      acr: 'acrdevfaurvoting001.azurecr.io'
       image: 'voting-demo-api'
       tag: "$(Build.BuildId)"
       dockerFile: 'Dockerfile'
