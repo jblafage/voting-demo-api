@@ -9,7 +9,7 @@ resources:
 
 variables:
   - name: solution
-    value: '$(Build.SourcesDirectory)/$(Build.Repository.Name)/**/*.sln'
+    value: '$(Build.SourcesDirectory)/**/*.sln'
   - name: buildConfiguration
     value: 'Release'
   - name: disable.coverage.autogenerate
