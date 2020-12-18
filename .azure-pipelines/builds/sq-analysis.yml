@@ -24,9 +24,10 @@ trigger:
 jobs:
 - template: jobs/sonar-process.yml@pipelines
   parameters:
-    sonarqube_host: 'https://sonarqube.app.corp'
-    prepare_sonarInstance: SNR-prd-admin-$(System.TeamProject)
-    
+    prepare_sonarAdditionalProperties: |
+      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+      sonar.coverage.exclusions=**/Migrations/*.cs,**/*Tests*/**/*
+      sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml
     step_postPrepare:
     - task: DotNetCoreCLI@2
       enabled: true
@@ -53,7 +54,3 @@ jobs:
         publishTestResults: true
         testRunTitle: 'SonarQube analysis test run'
 
-    prepare_sonarAdditionalProperties: |
-      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
-      sonar.coverage.exclusions=**/Migrations/*.cs,**/*Tests*/**/*
-      sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml
