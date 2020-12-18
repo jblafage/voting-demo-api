@@ -24,6 +24,7 @@ trigger:
 jobs:
 - template: jobs/sonar-process.yml@pipelines
   parameters:
+    prepare_scanner_mode: 'MSBuild'
     prepare_sonarAdditionalProperties: |
       sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
       sonar.coverage.exclusions=**/Migrations/*.cs,**/*Tests*/**/*
