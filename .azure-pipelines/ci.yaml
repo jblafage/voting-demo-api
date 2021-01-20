@@ -83,7 +83,7 @@ stages:
 
       - template: 'jobs/build-notes.yaml@pipelines'
         parameters:
-          condition: "and(succeeded(), neq(variables['Build.Reason'], 'PullRequest'))"
+          condition: "and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))"
 
 
       
