@@ -1,4 +1,4 @@
-# Build and push EPullXpert docker images
+# Build and push docker images
 
 name: '$(Date:yyyyMMdd)$(Rev:.r)'
 
@@ -7,7 +7,6 @@ resources:
     - repository: 'pipelines'
       type: 'git'
       name: 'Azure/template-pipelines'
-      ref: "refs/heads/features/job-build-notes"
 
 # Trigger build when branches are updated
 trigger:
