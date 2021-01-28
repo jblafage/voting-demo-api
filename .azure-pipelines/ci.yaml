@@ -1,0 +1,88 @@
+# Build and push docker images
+
+name: '$(Date:yyyyMMdd)$(Rev:.r)'
+
+resources:
+  repositories:
+    - repository: 'pipelines'
+      type: 'git'
+      name: 'Azure/template-pipelines'
+
+# Trigger build when branches are updated
+trigger:
+  branches:
+    include:
+      - 'master'
+      - 'develop'
+
+variables:
+  spnDev: 'spn-dev-app-faurvoting'
+  spnPreprod: 'spn-pre-app-faurvoting'
+  spnProd: 'spn-prd-app-faurvoting'
+
+  acrDev: 'acrdevfaurvoting001.azurecr.io'
+  acrPreprod: 'acrprefaurvoting001.azurecr.io'
+  acrProd: 'acrprdfaurvoting001.azurecr.io'
+
+  imageName: 'voting-demo-api'
+
+# Agent jobs
+stages:
+  - stage: 'Checker'
+    jobs:
+      - template: 'jobs/docker-lint-all.yaml@pipelines'
+        parameters:
+          dockerFile: '**/Dockerfile'
+
+      - template: 'jobs/docker-build-image.yaml@pipelines'
+        parameters:
+          jobName: build_image
+          image: '${{ variables.imageName }}'
+          dockerFile: 'Dockerfile'
+          buildContext: '.'
+          dependsOn:
+            - 'docker_lint_all'
+          condition: "and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))"
+
+  - stage: 'Build'
+    jobs:
+      - template: 'jobs/docker-build-and-push-image.yaml@pipelines'
+        parameters:
+          jobName: 'build_dev_image'
+          spn: '${{ variables.spnDev }}'
+          acr: '${{ variables.acrDev }}'
+          image: '${{ variables.imageName }}'
+          tag: '$(Build.BuildNumber)'
+          dockerFile: 'Dockerfile'
+          buildContext: '.'
+          condition: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))"
+
+      - template: 'jobs/docker-build-and-push-image.yaml@pipelines'
+        parameters:
+          jobName: 'build_preprod_image'
+          spn: '${{ variables.spnPreprod }}'
+          acr: '${{ variables.acrPreprod }}'
+          image: '${{ variables.imageName }}'
+          tag: '$(Build.BuildNumber)'
+          dockerFile: 'Dockerfile'
+          buildContext: '.'
+          condition: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))"
+
+      - template: 'jobs/docker-build-and-push-image.yaml@pipelines'
+        parameters:
+          jobName: 'build_prod_image'
+          spn: '${{ variables.spnProd }}'
+          acr: '${{ variables.acrProd }}'
+          image: '${{ variables.imageName }}'
+          tag: '$(Build.BuildNumber)'
+          dockerFile: 'Dockerfile'
+          buildContext: '.'
+          dependsOn: 'build_preprod_image'
+          condition: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))"
+
+      - template: 'jobs/build-notes.yaml@pipelines'
+        parameters:
+          condition: "and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))"
+
+
+      
