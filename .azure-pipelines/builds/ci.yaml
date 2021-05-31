@@ -16,11 +16,8 @@ trigger:
       - 'develop'
 
 variables:
-- name: container_registry_prod
-  value: 'cgr-prod-cloud-infrastructure'
-
-- name: container_registry_dev
-  value: 'cgr-dev-cloud-infrastructure'
+- name: container_registry
+  value: 'cgr-demo'
 
 - name: repository
   value: 'cloud/demo/voting-demo-api'
@@ -30,11 +27,11 @@ stages:
 - stage: 'Build'
   jobs:
 
-  # develop branch (push on CGR dev)
+  # develop branch
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
     - template: 'jobs/docker-build-and-push-imageV2.yaml@pipelines'
       parameters:
-        container_registry: '${{ variables.container_registry_dev }}'
+        container_registry: '${{ variables.container_registry }}'
         repository: '${{ variables.repository }}'
         dockerfile: 'Dockerfile'
         latest_tag: false
@@ -42,11 +39,11 @@ stages:
           $(Build.BuildNumber)-unstable
           latest-unstable
 
-  # main branch (push on CGR prod)
+  # main branch
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
     - template: 'jobs/docker-build-and-push-imageV2.yaml@pipelines'
       parameters:
-        container_registry: '${{ variables.container_registry_prod }}'
+        container_registry: '${{ variables.container_registry }}'
         repository: '${{ variables.repository }}'
         dockerfile: 'Dockerfile'
         latest_tag: true
