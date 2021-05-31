@@ -1,0 +1,26 @@
+# Lint Dockerfile
+
+name: '$(Date:yyyyMMdd)$(Rev:.r)'
+
+resources:
+  repositories:
+  - repository: 'pipelines'
+    type: 'git'
+    name: 'Azure/template-pipelines'
+
+trigger: none
+
+# Agent jobs
+stages:
+- stage: 'Lint'
+  jobs:
+  - template: 'jobs/docker-lint-all.yaml@pipelines'
+    parameters:
+      jobName: 'docker_lint_all'
+      dockerFile: 'Dockerfile'
+
+- stage: 'Build'
+  jobs:
+  - template: 'jobs/docker-build-imageV2.yaml@pipelines'
+    parameters:
+      dockerfile: 'Dockerfile'
