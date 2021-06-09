@@ -1,5 +1,3 @@
-# Build and push docker images
-
 name: '$(Date:yyyyMMdd)$(Rev:.r)'
 
 resources:
@@ -8,48 +6,15 @@ resources:
       type: 'git'
       name: 'Azure/template-pipelines'
 
-# Trigger build when branches are updated
 trigger:
   branches:
     include:
-      - 'master'
-      - 'develop'
+    - 'master'
+    - 'develop'
 
-variables:
-- name: container_registry
-  value: 'cgr-demo'
-
-- name: repository
-  value: 'cloud/demo/voting-demo-api'
-
-# Agent jobs
-stages:
-- stage: 'Build'
-  jobs:
-
-  # develop branch
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
-    - template: 'jobs/docker-build-and-push-imageV2.yaml@pipelines'
-      parameters:
-        container_registry: '${{ variables.container_registry }}'
-        repository: '${{ variables.repository }}'
-        dockerfile: 'Dockerfile'
-        latest_tag: false
-        tags: |
-          $(Build.BuildNumber)-unstable
-          latest-unstable
-
-  # main branch
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-    - template: 'jobs/docker-build-and-push-imageV2.yaml@pipelines'
-      parameters:
-        container_registry: '${{ variables.container_registry }}'
-        repository: '${{ variables.repository }}'
-        dockerfile: 'Dockerfile'
-        latest_tag: true
-        tags: |
-          $(Build.BuildNumber)
-
-  - template: 'jobs/build-notes.yaml@pipelines'
-
+extends:
+  template: stages/docker-ci.yaml@pipelines
+  parameters:
+    container_registry: 'cgr-demo'
+    repository: 'cloud/demo/voting-demo-api'
       
