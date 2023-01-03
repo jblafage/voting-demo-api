@@ -9,4 +9,6 @@ resources:
 trigger: none
 
 extends:
-  template: stages/sec-pr.yml@pipelines
+  template: jobs/check-branch-rebased.yml@pipelines
+  parameters:
+    default_branch: master

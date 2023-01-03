@@ -8,10 +8,6 @@ resources:
       name: 'Azure/template-pipelines'
 
 variables:
-  - name: solution
-    value: '$(Build.SourcesDirectory)/**/*.sln'
-  - name: buildConfiguration
-    value: 'Release'
   - name: disable.coverage.autogenerate
     value: 'true'
 
@@ -22,36 +18,12 @@ trigger:
       - 'master'
 
 jobs:
-- template: jobs/sonar-process.yml@pipelines
-  parameters:
-    prepare_scanner_mode: 'MSBuild'
-    prepare_sonarAdditionalProperties: |
-      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
-      sonar.coverage.exclusions=**/Migrations/*.cs,**/*Tests*/**/*
-      sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml
-    step_postPrepare:
-    - task: DotNetCoreCLI@2
-      enabled: true
-      displayName: 'dotnet restore'
-      inputs:
-        command: 'restore'
-        projects: '$(solution)'
-
-    - task: DotNetCoreCLI@2
-      enabled: true
-      displayName: 'dotnet build'
-      inputs:
-        command: 'build'
-        projects: '$(solution)'
-        arguments: '--no-restore --configuration $(buildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet test'
-      enabled: true
-      inputs:
-        command: 'test'
-        projects: '$(solution)'
-        arguments: '--no-restore --no-build --configuration $(buildConfiguration) --collect:"Code Coverage"'
-        publishTestResults: true
-        testRunTitle: 'SonarQube analysis test run'
-
+  - template: jobs/sonar-process.yml@pipelines
+    parameters:
+      prepare_scanner_mode: 'MSBuild'
+      prepare_sonarAdditionalProperties: |
+        sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+        sonar.coverage.exclusions=**/Migrations/*.cs,**/*Tests*/**/*
+        sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml
+      step_postPrepare:
+        - template: 'steps/dotnet-restore-build-test.yml@pipelines'

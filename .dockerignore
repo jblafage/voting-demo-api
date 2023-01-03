@@ -1,9 +1,10 @@
-.dockerignore
+*/.dockerignore
+*/Dockerfile
+*/docker-compose.yml
 .env
-.git
-.gitignore
-.vs
-.vscode
+.git*
+.vs*
 */bin
 */obj
 **/.toolstarget
+node_modules/

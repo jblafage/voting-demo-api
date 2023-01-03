@@ -5,23 +5,32 @@ services:
   db:
     image: postgres:11
     restart: always
+    env_file: .env
     environment:
       POSTGRES_DB: "voting"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "changeme"
+      POSTGRES_PASSWORD: "${PG_PASSWORD}"
     ports:
       - 5432:5432
 
   adminer:
+    depends_on:
+      - db
     image: adminer:4.7
     restart: always
     ports:
-      - 8080:8080
+      - 8081:8080
 
-  # api:
-  #   image: voting-demo-api:latest
-  #   restart: always
-  #   environment:
-  #     ConnectionStrings__VotingDb: "Host=db;Port=5432;Username=postgres;Password=changeme;Database=voting"
-  #   ports:
-  #     - 81:80
+  api:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    image: voting-demo-api:latest
+    restart: always
+    environment:
+      ConnectionStrings__VotingDb: "Host=db;Port=5432;Username=postgres;Password=${PG_PASSWORD};Database=voting"
+    ports:
+      - 5000:8080

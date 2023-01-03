@@ -1,23 +1,30 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
-WORKDIR /app
-EXPOSE 3039
-EXPOSE 44311
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
 
-FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
 
-# Copy csproj and restore as distinct layer
-COPY api_voting_demo.csproj ./
-RUN dotnet restore "api_voting_demo.csproj"
+COPY . .
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet build "api_voting_demo.csproj" -c Release
+RUN dotnet restore "api_voting_demo.csproj" && \
+    dotnet build "api_voting_demo.csproj" -c Release && \
+    dotnet publish "api_voting_demo.csproj" -c Release -o /app
 
-FROM build AS publish
-RUN dotnet publish "api_voting_demo.csproj" -c Release -o /app
+#==== RUNTIME ====#
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-alpine AS runtime
 
-FROM base AS final
+LABEL maintainers="TEAM-Cloud Ninjas <TEAM-cloudninjas@faurecia.onmicrosoft.com>"
+
+EXPOSE 8080
+
+ARG APP_USER=faurvoting
+ENV ASPNETCORE_URLS "http://*:8080"
+ENV UseHttpsRedirection="false"
+
+RUN adduser -D ${APP_USER}
+
 WORKDIR /app
-COPY --from=publish /app .
+
+COPY --from=build --chown=${APP_USER}:${APP_USER} /app .
+
+USER ${APP_USER}
+
 ENTRYPOINT ["dotnet", "api_voting_demo.dll"]

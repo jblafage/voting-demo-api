@@ -2,19 +2,18 @@ name: '$(Date:yyyyMMdd)$(Rev:.r)'
 
 resources:
   repositories:
-    - repository: 'pipelines'
-      type: 'git'
-      name: 'Azure/template-pipelines'
+      - repository: 'pipelines'
+        type: 'git'
+        name: 'Azure/template-pipelines'
 
 trigger:
   branches:
     include:
-    - 'master'
-    - 'develop'
+      - 'master'
+      - 'develop'
 
 extends:
   template: stages/docker-ci.yaml@pipelines
   parameters:
     container_registry: 'cgr-demo'
     repository: 'cloud/demo/voting-demo-api'
-      
