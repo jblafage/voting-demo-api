@@ -2,11 +2,11 @@ name: '$(Date:yyyyMMdd)$(Rev:.r)'
 
 resources:
   repositories:
-  - repository: 'pipelines'
-    type: 'git'
-    name: 'Azure/template-pipelines'
+    - repository: 'pipelines'
+      type: 'git'
+      name: 'Azure/template-pipelines'
 
 trigger: none
 
 extends:
-  template: stages/docker-pr.yaml@pipelines
+  template: stages/sec-pr.yml@pipelines
