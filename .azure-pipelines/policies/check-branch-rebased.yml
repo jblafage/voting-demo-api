@@ -1,0 +1,14 @@
+name: '$(Date:yyyyMMdd)$(Rev:.r)'
+
+resources:
+  repositories:
+    - repository: 'pipelines'
+      type: 'git'
+      name: 'Azure/template-pipelines'
+
+trigger: none
+
+extends:
+  template: jobs/check-branch-rebased.yml@pipelines
+  parameters:
+    default_branch: master
