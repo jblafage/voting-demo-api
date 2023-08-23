@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 WORKDIR /src
 
@@ -9,7 +9,7 @@ RUN dotnet restore "api_voting_demo.csproj" && \
     dotnet publish "api_voting_demo.csproj" -c Release -o /app
 
 #==== RUNTIME ====#
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine3.16 AS runtime
 
 LABEL maintainers="TEAM-Cloud Ninjas <TEAM-cloudninjas@faurecia.onmicrosoft.com>"
 
