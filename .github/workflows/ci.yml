@@ -4,7 +4,7 @@ run-name: Build Docker image for branch ${{ github.ref_name }}
 on:
   push: 
     branches: [develop, master]
-    
+  workflow_dispatch:
 
 jobs:
   docker-build-push-image:
