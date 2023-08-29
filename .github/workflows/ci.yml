@@ -1,0 +1,20 @@
+name: build-image-api
+run-name: Build Docker image for branch ${{ github.ref_name }}
+
+on:
+  push: 
+    branches: [develop, master]
+    
+
+jobs:
+  docker-build-push-image:
+    uses: jblafage/workflow-templates/.github/workflows/docker-build-push-image.yml@main
+    with:
+      image_repository: cloud/demo/voting-demo-api
+      build_context: .
+      dockerfile: Dockerfile
+      registry_server: acrprdfaurecia001.azurecr.io
+      registry_username: cloud-demo
+
+    secrets:
+      registry_password: ${{ secrets.REGISTRY_PASSWORD }}
