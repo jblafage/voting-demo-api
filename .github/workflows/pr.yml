@@ -4,6 +4,6 @@ on:
 
 jobs:
   build-dotnet:
-    uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test@main
+    uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test.yml@main
     with:
       dotnet_project: api_voting_demo.csproj
