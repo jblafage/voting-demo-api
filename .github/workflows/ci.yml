@@ -1,4 +1,4 @@
-name: build-image-api
+name: docker-build-push-ci
 run-name: Build Docker image for branch ${{ github.ref_name }}
 
 on:
