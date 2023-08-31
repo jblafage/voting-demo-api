@@ -12,7 +12,7 @@ jobs:
       dotnet_version: 6.0.x
       build_configuration: Release
       run_restore: true
-      run_tests: false
+      run_tests: true
   
   reusable-workflow-call-composite:
     uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test-composite.yml@main
@@ -32,4 +32,4 @@ jobs:
     - uses: jblafage/workflow-templates/.github/actions/dotnet-restore-build-test@main
       with:
         dotnet_project: api_voting_demo.csproj
-        run_tests: false
+        run_tests: true
