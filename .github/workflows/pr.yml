@@ -14,7 +14,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: jblafage/workflow-templates/actions/dotnet-restore-build-test/action.yml@main
+    - uses: jblafage/workflow-templates/actions/dotnet-restore-build-test@main
       with:
         dotnet_project: api_voting_demo.csproj
         run_tests: false
