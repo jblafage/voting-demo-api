@@ -10,7 +10,7 @@ jobs:
       dotnet_version: 6.0.x
       build_configuration: Release
       run_restore: true
-      run_test: true
+      run_tests: true
 
   build-with-composite:
     runs-on: ubuntu-latest
