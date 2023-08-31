@@ -7,6 +7,8 @@ jobs:
     uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test.yml@main
     with:
       dotnet_project: api_voting_demo.csproj
+      dotnet_version: 6.0.x
+      build_configuration: Release
 
   build-with-composite:
     runs-on: ubuntu-latest
