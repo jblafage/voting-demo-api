@@ -1,0 +1,35 @@
+name: dotnet-build-pr
+run-name: Build dotnet projet for PR
+
+on:
+  pull_request:
+
+jobs:
+  reusable-workflow-dotnet-build:
+    uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test.yml@main
+    with:
+      dotnet_project: api_voting_demo.csproj
+      dotnet_version: 6.0.x
+      build_configuration: Release
+      run_restore: true
+      run_tests: true
+  
+  reusable-workflow-call-composite:
+    uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test-composite.yml@main
+    with:
+      dotnet_project: api_voting_demo.csproj
+      dotnet_version: 6.0.x
+      build_configuration: Release
+      run_restore: true
+      run_tests: false
+
+  call-composite:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: jblafage/workflow-templates/.github/actions/dotnet-restore-build-test@main
+      with:
+        dotnet_project: api_voting_demo.csproj
+        run_tests: true
