@@ -9,6 +9,8 @@ jobs:
       dotnet_project: api_voting_demo.csproj
       dotnet_version: 6.0.x
       build_configuration: Release
+      run_restore: true
+      run_test: true
 
   build-with-composite:
     runs-on: ubuntu-latest
