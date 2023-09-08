@@ -33,3 +33,17 @@ jobs:
       with:
         dotnet_project: api_voting_demo.csproj
         run_tests: true
+
+  docker-container-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore build and test
+        uses: jblafage/workflow-templates/.github/docker-actions/dotnet-restore-build-test@main
+        with:
+          dotnet_project: 'src/myapp.csproj'
+          build_configuration: 'Release'
+          run_restore: 'true'
+          run_tests: 'false'
