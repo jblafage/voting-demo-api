@@ -43,7 +43,7 @@ jobs:
       - name: Restore build and test
         uses: jblafage/workflow-templates/.github/docker-actions/dotnet-restore-build-test@main
         with:
-          dotnet_project: 'src/myapp.csproj'
-          build_configuration: 'Release'
-          run_restore: 'true'
-          run_tests: 'false'
+          dotnet_project: api_voting_demo.csproj
+          build_configuration: Release
+          run_restore: true
+          run_tests: false
