@@ -5,23 +5,23 @@ on:
   pull_request:
 
 jobs:
-  reusable-workflow-dotnet-build:
-    uses: jblafage/workflow-templates/workflows/dotnet-restore-build-test.yml@features/repo-layout
-    with:
-      dotnet_project: api_voting_demo.csproj
-      dotnet_version: 6.0.x
-      build_configuration: Release
-      run_restore: true
-      run_tests: true
+  # reusable-workflow-dotnet-build:
+  #   uses: jblafage/workflow-templates/workflows/dotnet-restore-build-test.yml@features/repo-layout
+  #   with:
+  #     dotnet_project: api_voting_demo.csproj
+  #     dotnet_version: 6.0.x
+  #     build_configuration: Release
+  #     run_restore: true
+  #     run_tests: true
   
-  reusable-workflow-call-composite:
-    uses: jblafage/workflow-templates/workflows/dotnet-restore-build-test-composite.yml@features/repo-layout
-    with:
-      dotnet_project: api_voting_demo.csproj
-      dotnet_version: 6.0.x
-      build_configuration: Release
-      run_restore: true
-      run_tests: false
+  # reusable-workflow-call-composite:
+  #   uses: jblafage/workflow-templates/workflows/dotnet-restore-build-test-composite.yml@features/repo-layout
+  #   with:
+  #     dotnet_project: api_voting_demo.csproj
+  #     dotnet_version: 6.0.x
+  #     build_configuration: Release
+  #     run_restore: true
+  #     run_tests: false
 
   call-composite:
     runs-on: ubuntu-latest
