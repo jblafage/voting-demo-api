@@ -8,7 +8,7 @@ on:
 
 jobs:
   docker-build-push-image:
-    uses: jblafage/workflow-templates/.github/workflows/docker-build-push-image.yml@main
+    uses: jblafage/workflow-templates/workflows/docker-build-push-image.yml@features/repo-layout
     with:
       image_repository: cloud/demo/voting-demo-api
       build_context: .
