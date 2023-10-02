@@ -6,7 +6,7 @@ on:
 
 jobs:
   reusable-workflow-dotnet-build:
-    uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test.yml@main
+    uses: jblafage/workflow-templates/workflows/dotnet-restore-build-test.yml@features/repo-layout
     with:
       dotnet_project: api_voting_demo.csproj
       dotnet_version: 6.0.x
@@ -15,7 +15,7 @@ jobs:
       run_tests: true
   
   reusable-workflow-call-composite:
-    uses: jblafage/workflow-templates/.github/workflows/dotnet-restore-build-test-composite.yml@main
+    uses: jblafage/workflow-templates/workflows/dotnet-restore-build-test-composite.yml@features/repo-layout
     with:
       dotnet_project: api_voting_demo.csproj
       dotnet_version: 6.0.x
@@ -29,7 +29,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: jblafage/workflow-templates/.github/actions/dotnet-restore-build-test@main
+    - uses: jblafage/workflow-templates/composite/dotnet-restore-build-test@features/repo-layout
       with:
         dotnet_project: api_voting_demo.csproj
         run_tests: true
@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Restore build and test
-        uses: jblafage/workflow-templates/.github/docker-actions/dotnet-restore-build-test@main
+        uses: jblafage/workflow-templates/containers/dotnet-restore-build-test@features/repo-layout
         with:
           dotnet_project: api_voting_demo.csproj
           build_configuration: Release
